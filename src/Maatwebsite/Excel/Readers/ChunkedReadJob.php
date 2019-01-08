@@ -52,6 +52,11 @@ class ChunkedReadJob implements ShouldQueue
     private $encoding;
 
     /**
+     * @var string|null
+     */
+    private $delimiter;
+
+    /**
      * ChunkedReadJob constructor.
      *
      * @param             $file
@@ -71,7 +76,8 @@ class ChunkedReadJob implements ShouldQueue
         $chunkSize,
         callable $callback,
         $shouldQueue = true,
-        $encoding = null
+        $encoding = null,
+        $delimiter = null
     ) {
         $this->startRow   = $startRow;
         $this->chunkSize  = $chunkSize;
@@ -82,6 +88,7 @@ class ChunkedReadJob implements ShouldQueue
         $this->sheets      = $sheets;
         $this->shouldQueue = $shouldQueue;
         $this->encoding    = $encoding;
+        $this->delimiter   = $delimiter;
     }
 
     /***
@@ -101,6 +108,11 @@ class ChunkedReadJob implements ShouldQueue
         // Set encoding
         if (! is_null($this->encoding)) {
             $reader->reader->setInputEncoding($this->encoding);
+        }
+
+        // Set delimiter
+        if (! is_null($this->delimiter)) {
+            $reader->reader->setDelimiter($this->delimiter);
         }
 
         // Set the rows for the chunking
